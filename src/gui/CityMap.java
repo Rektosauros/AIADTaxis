@@ -79,5 +79,9 @@ public class CityMap extends JPanel {
 		graphics.drawImage(image, j + sizeX, i + sizeY, null);
 
 	}
+	
+	public int[][] getMap(){
+		return city;
+	}
 
 }
