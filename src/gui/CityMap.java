@@ -11,6 +11,11 @@ import javax.swing.JPanel;
 
 public class CityMap extends JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private int city[][] = { 
 			{ 2, 2, 2, 2, 2, 1, 1, 2, 1, 1, 1, 1, 1, 2, 2, 2 },
 			{ 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1 }, 

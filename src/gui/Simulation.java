@@ -5,9 +5,12 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
-import jade.util.leap.LinkedList;
-
 public class Simulation extends JFrame {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
 	private CityMap cityMap;
 	public ArrayList<String> roadCoords;

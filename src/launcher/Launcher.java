@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import aiad20177.*;
 import gui.Simulation;
-import jade.core.MainContainer;
 import jade.core.Runtime;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
@@ -45,25 +44,45 @@ public class Launcher {
 		centralService = this.container.acceptNewAgent("Central", central);
 		centralService.start();
 
+		ArrayList<String> roadTiles = simulation.getRoadTiles();
+		int nrRoadTiles = roadTiles.size() - 1;
+
 		// create taxis
 		for (int i = 0; i < N_TAXIS; i++) {
-			int numPass = (int) (Math.random() * 4 + 0);
-
-			ArrayList<String> roadTiles = simulation.getRoadTiles();
-			int nrRoadTiles = roadTiles.size() - 1;
+			int numPass = (int) (Math.random() * MAX_PASSENGERS_PERTAXI + 0);
 
 			int pos = (int) Math.random() * nrRoadTiles + 0;
 			String[] coord = roadTiles.get(pos).split(";");
-			Taxi taxi = new Taxi(Integer.parseInt(coord[0]), Integer.parseInt(coord[1]), MAX_PASSENGERS_PERTAXI);
-			
+			Taxi taxi = new Taxi(Integer.parseInt(coord[0]), Integer.parseInt(coord[1]), numPass);
+			// put taxi on the map
+			roadTiles.remove(pos);
+			nrRoadTiles--;
+
 			AgentController taxiAgent;
-			taxiAgent = this.container.acceptNewAgent("Taxi nr"+i, taxi);
+			taxiAgent = this.container.acceptNewAgent("Taxi nr" + i, taxi);
 			taxiAgent.start();
-			
+
 			taxis.add(taxi);
 		}
-
+		
 		// create passengers
+		for (int i = 0; i < N_PASSANGERS; i++) {
+
+			int pos = (int) Math.random() * nrRoadTiles + 0;
+			String[] coord = roadTiles.get(pos).split(";");
+			Passenger passenger = new Passenger(Integer.parseInt(coord[0]), Integer.parseInt(coord[1]), "teste");
+			// put passenger on the map
+			roadTiles.remove(pos);
+			nrRoadTiles--;
+			
+			AgentController passengerAgent;
+			passengerAgent = this.container.acceptNewAgent("Passenger nr"+i, passenger);
+			passengerAgent.start();
+			
+			passengers.add(passenger);
+		}
+
+		
 	}
 
 	private void buidDisplay() {
