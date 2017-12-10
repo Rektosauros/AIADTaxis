@@ -23,6 +23,18 @@ public class AskTaxi implements Serializable {
 
 	private AID agentIdentifier;
 	
+	public AskTaxi(int PassengerID, int currX, int currY, int finaX, int finaY) {
+		
+		this.idPassenger = PassengerID;
+		this.currentX = currX;
+		this.currentY = currY;
+		this.finalX = finaX;
+		this.finalY = finaY;
+		
+		
+	}
+	
+	
 	public int getIdPassenger() {
 		return idPassenger;
 	}

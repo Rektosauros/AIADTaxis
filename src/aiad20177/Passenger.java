@@ -1,5 +1,10 @@
 package aiad20177;
 import jade.core.Agent;
+
+import java.io.IOException;
+
+import MSGS.CentralPassenger;
+import MSGS.PassengerCentral;
 import jade.core.*;
 import jade.core.behaviours.*;
 import jade.lang.acl.ACLMessage;
@@ -66,55 +71,8 @@ import jade.domain.FIPAException;
 		}
 
 
-	// classe do behaviour
-	   class PassengerBehaviour extends SimpleBehaviour {
-	      private int n = 0;
 
-	      // construtor do behaviour
-	      public PassengerBehaviour(Agent a) {
-	         super(a);
-	      }
-
-	      // método action
-	      public void action() {
-	    	  
-	    	  int state = 1;
-	    	  
-	    	  switch (state) {
-	    	  
-	    	  case 1:
-	    		  
-	    		  //message receive
-	         String receive;
-	    	 MessageTemplate message = MessageTemplate.MatchPerformative(ACLMessage.REQUEST); 
-	         ACLMessage msg = myAgent.receive(message);
-	         if(msg != null) {
-	        	 try {
-					receive = (String) msg.getContentObject();
-				} catch (UnreadableException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-	         }
-	         //reply
-	         
-	         
-	         
-	    	  case 2:
-	    		 String inform;
-	 	    	 MessageTemplate informTemplate = MessageTemplate.or(MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL), 
-	 	    			 									   MessageTemplate.MatchPerformative(ACLMessage.REJECT_PROPOSAL)); 
-	 	         ACLMessage msg2 = myAgent.receive(informTemplate);
-	    		  
-	    	  }
-	      }
-
-	      // método done
-	      public boolean done() {
-	         return n==10;
-	      }
-
-	   }   // fim da classe Behaviour
+ // fim da classe Behaviour
 
 
 	   // método setup
@@ -142,37 +100,59 @@ import jade.domain.FIPAException;
 	      }
 
 	      // cria behaviour
-/*	      TaxiBehaviour b = new TaxiBehaviour(this);
-	      addBehaviour(b);
+      addBehaviour(new CyclicBehaviour(){
 		  
-	      // toma a iniciativa se for agente "pong"
-	      if(tipo.equals("pong")) {
-	         // pesquisa DF por agentes "ping"
-	         DFAgentDescription template = new DFAgentDescription();
-	         ServiceDescription sd1 = new ServiceDescription();
-	         sd1.setType("Agente ping");
-	         template.addServices(sd1);
-	         try {
-	            DFAgentDescription[] result = DFService.search(this, template);
-	            // envia mensagem "pong" inicial a todos os agentes "ping"
-	            ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-	            for(int i=0; i<result.length; ++i)
-	               msg.addReceiver(result[i].getName());
-	            msg.setContent("pong");
-	            send(msg);
-	         } catch(FIPAException e) { e.printStackTrace(); }
-	      }*/
-
-	   }   // fim do metodo setup
-
-	   // método takeDown
-	   protected void takeDown() {
-	      // retira registo no DF
-	      try {
-	         DFService.deregister(this);  
-	      } catch(FIPAException e) {
-	         e.printStackTrace();
+    	  private static final long serialVersionUID = 1L;
+    	  
+    	  private int step = 2;
+    	  
+    	  
+ public void action() {
+	    	  
+	    	  int state = 1;
+	    	  
+	    	  switch (state) {
+	    	  
+	    	  case 1:
+	    		  
+	    		  //message receive
+	    	MessageTemplate message = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
+	        ACLMessage msg = myAgent.receive(message);
+	         if(msg != null) {
+	        	 try {
+			CentralPassenger receive = (CentralPassenger) msg.getContentObject();
+				} catch (UnreadableException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	         }
+	         
+	      /*   if(receive.getMSG() == true) {
+	        	 
+	        	 System.out.println("Passenger is taking a ride \n" );
+	        	 
+	         }*/
+	         //reply
+	         
+	         
+	         
+	         
+	    	  case 2:
+	    		 PassengerCentral inform = new PassengerCentral(id, x, y, stopX, stopY);
+	    		 ACLMessage msg2 = new ACLMessage(ACLMessage.INFORM);
+	    		 try {
+					msg2.setContentObject(inform);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	    		 
+	    		 msg2 = blockingReceive();
+	    		 msg2.addReceiver(new AID("Central", AID.ISLOCALNAME));
+	    		 send(msg2);
+	    	  }
 	      }
-	   }
 
-	}   //
+	   });  // fim do metodo setup
+
+	}}   //

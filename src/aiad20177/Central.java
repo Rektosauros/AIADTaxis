@@ -1,5 +1,13 @@
 package aiad20177;
+import java.io.IOException;
+
+import MSGS.AskTaxi;
+import MSGS.CentralPassenger;
+import MSGS.PassengerCentral;
+import MSGS.TaxiCentral;
+import jade.core.AID;
 import jade.core.Agent;
+import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -17,58 +25,6 @@ public class Central extends Agent{
 			
 		}
 		
-		
-	   // classe do behaviour
-	   class CentralBehaviour extends SimpleBehaviour {
-	      private int n = 0;
-
-	      // construtor do behaviour
-	      public CentralBehaviour(Agent a) {
-	         super(a);
-	      }
-
-	      // método action
-	      public void action() {
-	    	  
-	    	  int state = 1;
-	    	  
-	    	  switch (state) {
-	    	  
-	    	  case 1:
-	    		  
-	    		  //message receive
-	         String receive;
-	    	 MessageTemplate message = MessageTemplate.MatchPerformative(ACLMessage.REQUEST); 
-	         ACLMessage msg = myAgent.receive(message);
-	         if(msg != null) {
-	        	 try {
-					receive = (String) msg.getContentObject();
-				} catch (UnreadableException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-	         }
-	         //reply
-	         
-	         
-	         
-	    	  case 2:
-	    		 String inform;
-	 	    	 MessageTemplate informTemplate = MessageTemplate.or(MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL), 
-	 	    			 									   MessageTemplate.MatchPerformative(ACLMessage.REJECT_PROPOSAL)); 
-	 	         ACLMessage msg2 = myAgent.receive(informTemplate);
-	    		  
-	    	  }
-	      }
-
-	      // método done
-	      public boolean done() {
-	         return n==10;
-	      }
-
-	   }   // fim da classe Behaviour
-
-
 	   // método setup
 	   protected void setup() {
 	      String tipo = "";
@@ -92,39 +48,82 @@ public class Central extends Agent{
 	      } catch(FIPAException e) {
 	         e.printStackTrace();
 	      }
+	      
+	      
+	      addBehaviour(new CyclicBehaviour(){
+	    	  private static final long serialVersionUID = 1L;
+	    	  
+	    	  private int step = 1;
 
-	      // cria behaviour
-/*	      TaxiBehaviour b = new TaxiBehaviour(this);
-	      addBehaviour(b);
-		  
-	      // toma a iniciativa se for agente "pong"
-	      if(tipo.equals("pong")) {
-	         // pesquisa DF por agentes "ping"
-	         DFAgentDescription template = new DFAgentDescription();
-	         ServiceDescription sd1 = new ServiceDescription();
-	         sd1.setType("Agente ping");
-	         template.addServices(sd1);
-	         try {
-	            DFAgentDescription[] result = DFService.search(this, template);
-	            // envia mensagem "pong" inicial a todos os agentes "ping"
-	            ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-	            for(int i=0; i<result.length; ++i)
-	               msg.addReceiver(result[i].getName());
-	            msg.setContent("pong");
-	            send(msg);
-	         } catch(FIPAException e) { e.printStackTrace(); }
-	      }*/
-
-	   }   // fim do metodo setup
-
-	   // método takeDown
-	   protected void takeDown() {
-	      // retira registo no DF
-	      try {
-	         DFService.deregister(this);  
-	      } catch(FIPAException e) {
-	         e.printStackTrace();
+	      // método action
+	      public void action() {
+	    	  
+	    	  int state = 1;
+	    	  PassengerCentral receive;
+	    	  TaxiCentral receive2;
+	    	  
+	    	  switch (state) {
+	    	  
+	    	  case 1:
+	    		  
+	    		  //message receive
+	    		MessageTemplate message = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
+	  	        ACLMessage msg = myAgent.receive(message);
+	  	         if(msg != null) {
+	  	        	 try {
+	  			receive = (PassengerCentral) msg.getContentObject();
+	  				} catch (UnreadableException e) {
+	  					// TODO Auto-generated catch block
+	  					e.printStackTrace();
+	  				}
+	  	         }
+	  	         
+	  	         
+/*	  	       AskTaxi inform = new AskTaxi(receive.getPassengerID(), receive.getCurrentX(), receive.getCurrentY(), receive.getFinalX(), receive.getFinalY());
+	    		 ACLMessage msg2 = new ACLMessage(ACLMessage.INFORM);
+	    		 try {
+					msg2.setContentObject(inform);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	    		 
+	    		 msg2 = blockingReceive();
+	    		 msg2.addReceiver(new AID("taxi", AID.ISLOCALNAME));
+	    		 send(msg2);
+	    		 
+	    		 state = 2;
+	         
+	         */
+	         
+	    	  case 2:
+	    		  MessageTemplate message2 = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
+		  	        ACLMessage msg3 = myAgent.receive(message2);
+		  	         if(msg3 != null) {
+		  	        	 try {
+		  			receive2 = (TaxiCentral) msg3.getContentObject();
+		  				} catch (UnreadableException e) {
+		  					// TODO Auto-generated catch block
+		  					e.printStackTrace();
+		  				}
+		  	         }
+		  	         
+/*		  	       CentralPassenger informPassenger = new CentralPassenger(receive2.getTaxiID(), receive2.getVacancy());
+		    		 ACLMessage msg4 = new ACLMessage(ACLMessage.INFORM);
+		    		 try {
+						msg4.setContentObject(informPassenger);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		    		 
+		    		 msg4 = blockingReceive();
+		    		 msg4.addReceiver(new AID("Passenger", AID.ISLOCALNAME));
+		    		 send(msg4);
+	    	  */}
 	      }
-	   }
 
-	}   //
+	      });   // fim do metodo setup
+
+	}
+}//

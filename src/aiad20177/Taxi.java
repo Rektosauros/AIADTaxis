@@ -1,5 +1,11 @@
 package aiad20177;
 import jade.core.Agent;
+
+import java.io.IOException;
+import java.io.Serializable;
+
+import MSGS.AskTaxi;
+import MSGS.TaxiCentral;
 import jade.core.*;
 import jade.core.behaviours.*;
 import jade.lang.acl.ACLMessage;
@@ -93,62 +99,7 @@ import jade.domain.FIPAException;
 			
 		}
 		
-		
-	   // classe do behaviour
-	   class TaxiBehaviour extends SimpleBehaviour {
-	      /**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-		
-		
-		private int n = 0;
 
-	      // construtor do behaviour
-	      public TaxiBehaviour(Agent a) {
-	         super(a);
-	      }
-
-	      // método action
-	      public void action() {
-	    	  
-	    	  int state = 1;
-	    	  
-	    	  switch (state) {
-	    	  
-	    	  case 1:
-	    		  
-	    		  //message receive
-	         String receive;
-	    	 MessageTemplate message = MessageTemplate.MatchPerformative(ACLMessage.REQUEST); 
-	         ACLMessage msg = myAgent.receive(message);
-	         if(msg != null) {
-	        	 try {
-					receive = (String) msg.getContentObject();
-				} catch (UnreadableException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-	         }
-	         //reply
-	         
-	         
-	         
-	    	  case 2:
-	    		 String inform;
-	 	    	 MessageTemplate informTemplate = MessageTemplate.or(MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL), 
-	 	    			 									   MessageTemplate.MatchPerformative(ACLMessage.REJECT_PROPOSAL)); 
-	 	         ACLMessage msg2 = myAgent.receive(informTemplate);
-	    		  
-	    	  }
-	      }
-
-	      // método done
-	      public boolean done() {
-	         return n==10;
-	      }
-
-	   }   // fim da classe Behaviour
 
 
 	   // método setup
@@ -174,26 +125,66 @@ import jade.domain.FIPAException;
 	      } catch(FIPAException e) {
 	         e.printStackTrace();
 	      }
+	      
+	      addBehaviour(new CyclicBehaviour(){
+	    	  private static final long serialVersionUID = 1L;
+	    	  
+	    	  private int step = 1;
+	    	  
+	    	  
+	    	  // método action
+		      public void action() {
+		    	  
+		    	  int state = 1;
+		    	  
+		    	  switch (state) {
+		    	  
+		    	  case 1:
+		    		  
+		    		  //message receive
+		    	 MessageTemplate message = MessageTemplate.MatchPerformative(ACLMessage.REQUEST); 
+		         ACLMessage msg = myAgent.receive(message);
+		         if(msg != null) {
+		        	 try {
+						AskTaxi receive = (AskTaxi) msg.getContentObject();
+					} catch (UnreadableException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		         }
+		         //reply
+		         TaxiCentral response;
+		         
+		         if(occupied == false) {
+		        	 
+		        response = new TaxiCentral(id, x, y, true);
+		        	 
+		         }
+		         else {
+		        	 
+		       response = new TaxiCentral(id, x, y, false);
+		        	 
+		         }
+		         
+		         ACLMessage reply = msg.createReply();
+		         reply.setPerformative(ACLMessage.INFORM);
+					try {
+						reply.setContentObject((Serializable)response);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					send(reply);
+	    	  
+		    	  }}
 
-	      // cria behaviour
-	      TaxiBehaviour b = new TaxiBehaviour(this);
-	      addBehaviour(b);
-		  
 
-	   }   // fim do metodo setup
+	   });}   // fim do metodo setup
 
-	   // método takeDown
-	   protected void takeDown() {
-	      // retira registo no DF
-	      try {
-	         DFService.deregister(this);  
-	      } catch(FIPAException e) {
-	         e.printStackTrace();
-	      }
-	   }
 	   
 	   protected double distance(int x, int y, int x1, int y1) {
 			return Math.sqrt(Math.pow(x - x1, 2) + Math.pow(y - y1, 2));
 		}
 
-	}   //
+}   //

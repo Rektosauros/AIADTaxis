@@ -2,7 +2,7 @@ package MSGS;
 
 import java.io.Serializable;
 
-public class PassengerInfo  implements Serializable {
+public class PassengerCentral  implements Serializable {
 
 	/**
 	 * 
@@ -17,7 +17,7 @@ public class PassengerInfo  implements Serializable {
 	private int finalX;
 	private int finalY;
 
-	public PassengerInfo(int id, int x, int y, int finalX, int finalY) {
+	public PassengerCentral(int id, int x, int y, int finalX, int finalY) {
 
 		this.passengerID = id;
 
