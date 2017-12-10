@@ -39,7 +39,7 @@ public class Simulation extends JFrame {
 				}
 			}
 		}
-		System.out.println(coords);
+		//System.out.println(coords);
 		return roadCoords;
 	}
 	

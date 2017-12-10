@@ -102,6 +102,7 @@ public class CityMap extends JPanel {
 	}
 	
 	public boolean setCoord(int x, int y, String new_tile) {
+		
 		if(city[x][y]==2) {
 			switch (new_tile) {
 			case "taxi":

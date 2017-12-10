@@ -53,14 +53,12 @@ public class Launcher {
 
 		ArrayList<String> roadTiles = simulation.getRoadTiles();
 		int nrRoadTiles = roadTiles.size() - 1;
-		System.out.println("SIZE"+nrRoadTiles);
 
 		// create taxis
 		for (int i = 0; i < N_TAXIS; i++) {
 			int numPass = (int) (Math.random() * MAX_PASSENGERS_PERTAXI + 0);
 
 			int pos = (int) Math.floor(Math.random() * nrRoadTiles + 0);
-			System.out.println("POS"+pos);
 			String[] coord = roadTiles.get(pos).split(";");
 			Taxi taxi = new Taxi(Integer.parseInt(coord[0]), Integer.parseInt(coord[1]), numPass);
 			simulation.setCityMapCoord(Integer.parseInt(coord[0]), Integer.parseInt(coord[1]), "taxi");
@@ -77,7 +75,7 @@ public class Launcher {
 		// create passengers
 		for (int i = 0; i < N_PASSANGERS; i++) {
 
-			int pos = (int) Math.random() * nrRoadTiles + 0;
+			int pos = (int) Math.floor(Math.random() * nrRoadTiles + 0);
 			String[] coord = roadTiles.get(pos).split(";");
 			roadTiles.remove(pos);
 			nrRoadTiles--;
