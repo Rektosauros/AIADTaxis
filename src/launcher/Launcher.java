@@ -23,35 +23,44 @@ public class Launcher {
 
 	private ArrayList<Taxi> taxis;
 	private ArrayList<Passenger> passengers;
-	private ContainerController container;
+	private ContainerController mainContainer;
 
-	public Launcher() throws IOException {
+	public Launcher() throws IOException, StaleProxyException {
+		System.out.println("Creating Launcher");
+		
 		this.simulation = new Simulation();
 	}
 
 	public void begin() throws StaleProxyException {
+		System.out.println("Beginning");
 		buildModel();
 		buidDisplay();
+		//System.out.println(simulation.printCityMap());
+		
+		
 	}
 
 	private void buildModel() throws StaleProxyException {
+		System.out.println("Building Model");
 		this.taxis = new ArrayList<Taxi>();
 		this.passengers = new ArrayList<Passenger>();
 
 		Central central = new Central();
 
 		AgentController centralService;
-		centralService = this.container.acceptNewAgent("Central", central);
+		centralService = this.mainContainer.acceptNewAgent("Central", central);
 		centralService.start();
 
 		ArrayList<String> roadTiles = simulation.getRoadTiles();
 		int nrRoadTiles = roadTiles.size() - 1;
+		System.out.println("SIZE"+nrRoadTiles);
 
 		// create taxis
 		for (int i = 0; i < N_TAXIS; i++) {
 			int numPass = (int) (Math.random() * MAX_PASSENGERS_PERTAXI + 0);
 
-			int pos = (int) Math.random() * nrRoadTiles + 0;
+			int pos = (int) Math.floor(Math.random() * nrRoadTiles + 0);
+			System.out.println("POS"+pos);
 			String[] coord = roadTiles.get(pos).split(";");
 			Taxi taxi = new Taxi(Integer.parseInt(coord[0]), Integer.parseInt(coord[1]), numPass);
 			simulation.setCityMapCoord(Integer.parseInt(coord[0]), Integer.parseInt(coord[1]), "taxi");
@@ -59,7 +68,7 @@ public class Launcher {
 			nrRoadTiles--;
 
 			AgentController taxiAgent;
-			taxiAgent = this.container.acceptNewAgent("Taxi nr" + i, taxi);
+			taxiAgent = this.mainContainer.acceptNewAgent("Taxi nr" + i, taxi);
 			taxiAgent.start();
 
 			taxis.add(taxi);
@@ -85,7 +94,7 @@ public class Launcher {
 			
 
 			AgentController passengerAgent;
-			passengerAgent = this.container.acceptNewAgent("Passenger nr" + i, passenger);
+			passengerAgent = this.mainContainer.acceptNewAgent("Passenger nr" + i, passenger);
 			passengerAgent.start();
 
 			passengers.add(passenger);
@@ -93,10 +102,12 @@ public class Launcher {
 	}
 
 	private void buidDisplay() {
+		System.out.println("Building Display");
 		simulation.startSimulation();
 	}
 
 	public void launchJade() throws StaleProxyException {
+		System.out.println("Launching Jade");
 
 		Runtime rt = Runtime.instance();
 		Profile p1 = new ProfileImpl();
@@ -104,9 +115,17 @@ public class Launcher {
 		p1.setParameter(Profile.MAIN_HOST, "localhost");
 		p1.setParameter(Profile.GUI, "true");
 
-		this.container = rt.createMainContainer(p1);
+		this.mainContainer = rt.createMainContainer(p1);
 
 		begin();
+
+	}
+	
+	public static void main(String args[]) throws IOException, StaleProxyException  {
+		
+		System.out.println("Start program");
+		Launcher n = new Launcher();
+		n.launchJade();
 
 	}
 }

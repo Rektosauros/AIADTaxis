@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -34,17 +35,18 @@ public class CityMap extends JPanel {
 			{ 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 2, 2, 2, 3 },
 			{ 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1 } };
 
-	private BufferedImage taxi, road, sidewalk, passenger;
+	private BufferedImage taxi, road, sidewalk, passenger, taxistop;
 
 	public CityMap() throws IOException {
 		loadIcons();
 	}
 
 	private void loadIcons() throws IOException {
-		this.taxi = ImageIO.read(new File("images/taxi.jpg"));
-		this.road = ImageIO.read(new File("images/road.jpg"));
+		this.taxi = ImageIO.read(new File("images/taxi.png"));
+		this.road = ImageIO.read(new File("images/road.gif"));
 		this.sidewalk = ImageIO.read(new File("images/sidewalk.jpg"));
-		this.passenger = ImageIO.read(new File("images/passenger.jpg"));
+		this.passenger = ImageIO.read(new File("images/passenger.png"));
+		this.taxistop = ImageIO.read(new File("images/taxistop.png"));
 	}
 
 	@Override
@@ -63,6 +65,16 @@ public class CityMap extends JPanel {
 					break;
 				case 2:
 					drawImages(graphics, this.road, i, j);
+					break;
+				case 3:
+					drawImages(graphics, this.taxistop, i, j);
+					break;
+				case 4:
+					drawImages(graphics, this.taxi, i, j);
+					break;
+				case 5:
+					drawImages(graphics, this.passenger, i, j);
+					break;
 				default:
 					break;
 				}
@@ -73,15 +85,15 @@ public class CityMap extends JPanel {
 	private void drawImages(Graphics2D graphics, BufferedImage image, int i, int j) {
 		int sizeX, sizeY;
 
-		if (getWidth() > getHeight()) {
-			sizeX = getHeight() / 10;
+		/*if (getWidth() > getHeight()) {
+			sizeX = image.getWidth();
 			sizeY = sizeX;
 		} else {
 			sizeX = getWidth() / 10;
 			sizeY = sizeX;
-		}
+		}*/
 
-		graphics.drawImage(image, j + sizeX, i + sizeY, null);
+		graphics.drawImage(image, j * image.getWidth(), i * image.getHeight(), null);
 
 	}
 	
@@ -103,6 +115,18 @@ public class CityMap extends JPanel {
 			}
 		}
 		return false;
+	}
+	
+	public String printCityMap() {
+		String mapString="";
+		
+		for(int i=0;i<city.length;i++) {
+			mapString+=System.getProperty("line.separator");
+			for(int j=0;j<city[i].length;j++) {
+				mapString+=""+city[j][i];
+			}
+		}
+		return mapString;
 	}
 
 }

@@ -29,14 +29,17 @@ public class Simulation extends JFrame {
 	public ArrayList<String> getRoadTiles() {
 		roadCoords = new ArrayList<String>();
 		String coord;
+		String coords="";
 		for(int i = 0;i<cityMap.getMap().length;i++) {
 			for(int j = 0;j<cityMap.getMap()[i].length;j++) {
 				if(cityMap.getMap()[j][i] == 2) {
 					coord = j+";"+i;
+					coords+=coord+ " ";
 					roadCoords.add(coord);
 				}
 			}
 		}
+		System.out.println(coords);
 		return roadCoords;
 	}
 	
@@ -56,6 +59,10 @@ public class Simulation extends JFrame {
 	
 	public boolean setCityMapCoord(int x, int y, String new_tile) {
 		return cityMap.setCoord(x, y, new_tile);
+	}
+	
+	public String printCityMap() {
+		return cityMap.printCityMap();
 	}
 
 }

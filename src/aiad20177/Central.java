@@ -13,6 +13,10 @@ public class Central extends Agent{
 		
 		private static final long serialVersionUID = 1L;
 		
+		public Central() {
+			
+		}
+		
 		
 	   // classe do behaviour
 	   class CentralBehaviour extends SimpleBehaviour {
