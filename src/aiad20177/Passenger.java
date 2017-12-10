@@ -18,18 +18,18 @@ import jade.domain.FIPAException;
 		 */
 		private static final long serialVersionUID = 1L;
 		private static int idCounter = 1;
-		int x, y, id;
-		String destination;
+		int x, y, stopX, stopY, id;
 		
 		
-		public Passenger(int x1, int y1, String destination1) {
+		public Passenger(int x1, int y1, int sX, int sY) {
 			
 			
 			this.id = idCounter;
 			idCounter++;
 			this.x = x1;
 			this.y = y1;
-			this.destination = destination1;
+			this.stopX=sX;
+			this.stopY=sY;
 			
 			
 		}
@@ -45,13 +45,28 @@ import jade.domain.FIPAException;
 			return this.y;
 		}
 		
-		public String getDestination() {
-			
-			return this.destination;
-			
+
+	   public int getStopX() {
+			return stopX;
 		}
 
-	   // classe do behaviour
+
+		public void setStopX(int stopX) {
+			this.stopX = stopX;
+		}
+
+
+		public int getStopY() {
+			return stopY;
+		}
+
+
+		public void setStopY(int stopY) {
+			this.stopY = stopY;
+		}
+
+
+	// classe do behaviour
 	   class PassengerBehaviour extends SimpleBehaviour {
 	      private int n = 0;
 

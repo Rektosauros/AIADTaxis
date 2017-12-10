@@ -14,6 +14,7 @@ public class Simulation extends JFrame {
 	
 	private CityMap cityMap;
 	public ArrayList<String> roadCoords;
+	public ArrayList<String> stopCoords;
 	
 	public Simulation() throws IOException {
 		this.cityMap = new CityMap();
@@ -37,6 +38,24 @@ public class Simulation extends JFrame {
 			}
 		}
 		return roadCoords;
+	}
+	
+	public ArrayList<String> getStopTiles(){
+		stopCoords = new ArrayList<String>();
+		String coord;
+		for(int i = 0;i<cityMap.getMap().length;i++) {
+			for(int j = 0;j<cityMap.getMap()[i].length;j++) {
+				if(cityMap.getMap()[j][i] == 3) {
+					coord = j+";"+i;
+					stopCoords.add(coord);
+				}
+			}
+		}
+		return stopCoords;
+	}
+	
+	public boolean setCityMapCoord(int x, int y, String new_tile) {
+		return cityMap.setCoord(x, y, new_tile);
 	}
 
 }

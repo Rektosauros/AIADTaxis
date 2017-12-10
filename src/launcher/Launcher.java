@@ -54,7 +54,7 @@ public class Launcher {
 			int pos = (int) Math.random() * nrRoadTiles + 0;
 			String[] coord = roadTiles.get(pos).split(";");
 			Taxi taxi = new Taxi(Integer.parseInt(coord[0]), Integer.parseInt(coord[1]), numPass);
-			// put taxi on the map
+			simulation.setCityMapCoord(Integer.parseInt(coord[0]), Integer.parseInt(coord[1]), "taxi");
 			roadTiles.remove(pos);
 			nrRoadTiles--;
 
@@ -64,25 +64,32 @@ public class Launcher {
 
 			taxis.add(taxi);
 		}
-		
+
 		// create passengers
 		for (int i = 0; i < N_PASSANGERS; i++) {
 
 			int pos = (int) Math.random() * nrRoadTiles + 0;
 			String[] coord = roadTiles.get(pos).split(";");
-			Passenger passenger = new Passenger(Integer.parseInt(coord[0]), Integer.parseInt(coord[1]), "teste");
-			// put passenger on the map
 			roadTiles.remove(pos);
 			nrRoadTiles--;
+
+			// define passenger stop
+			ArrayList<String> stopTiles = simulation.getStopTiles();
+			int nrStopTiles = stopTiles.size() - 1;
+			int stopIndex = (int) Math.random() * nrStopTiles + 0;
+			String[] stopCoord = stopTiles.get(stopIndex).split(";");
+			stopTiles.remove(stopIndex);
 			
+			Passenger passenger = new Passenger(Integer.parseInt(coord[0]), Integer.parseInt(coord[1]), Integer.parseInt(stopCoord[0]), Integer.parseInt(stopCoord[0]));
+			simulation.setCityMapCoord(Integer.parseInt(coord[0]), Integer.parseInt(coord[1]), "passenger");
+			
+
 			AgentController passengerAgent;
-			passengerAgent = this.container.acceptNewAgent("Passenger nr"+i, passenger);
+			passengerAgent = this.container.acceptNewAgent("Passenger nr" + i, passenger);
 			passengerAgent.start();
-			
+
 			passengers.add(passenger);
 		}
-
-		
 	}
 
 	private void buidDisplay() {
