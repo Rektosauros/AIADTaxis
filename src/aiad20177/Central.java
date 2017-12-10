@@ -70,16 +70,16 @@ public class Central extends Agent{
 	    		MessageTemplate message = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 	  	        ACLMessage msg = myAgent.receive(message);
 	  	         if(msg != null) {
+	  	        	 receive = null;
 	  	        	 try {
 	  			receive = (PassengerCentral) msg.getContentObject();
 	  				} catch (UnreadableException e) {
 	  					// TODO Auto-generated catch block
 	  					e.printStackTrace();
 	  				}
-	  	         }
 	  	         
 	  	         
-/*	  	       AskTaxi inform = new AskTaxi(receive.getPassengerID(), receive.getCurrentX(), receive.getCurrentY(), receive.getFinalX(), receive.getFinalY());
+	  	        AskTaxi inform = new AskTaxi(receive.getPassengerID(), receive.getCurrentX(), receive.getCurrentY(), receive.getFinalX(), receive.getFinalY());
 	    		 ACLMessage msg2 = new ACLMessage(ACLMessage.INFORM);
 	    		 try {
 					msg2.setContentObject(inform);
@@ -93,22 +93,24 @@ public class Central extends Agent{
 	    		 send(msg2);
 	    		 
 	    		 state = 2;
+	    		 
+	  	         }
 	         
-	         */
+	         
 	         
 	    	  case 2:
 	    		  MessageTemplate message2 = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 		  	        ACLMessage msg3 = myAgent.receive(message2);
 		  	         if(msg3 != null) {
+		  	        	 receive2 = null;
 		  	        	 try {
 		  			receive2 = (TaxiCentral) msg3.getContentObject();
 		  				} catch (UnreadableException e) {
 		  					// TODO Auto-generated catch block
 		  					e.printStackTrace();
 		  				}
-		  	         }
 		  	         
-/*		  	       CentralPassenger informPassenger = new CentralPassenger(receive2.getTaxiID(), receive2.getVacancy());
+		  	       CentralPassenger informPassenger = new CentralPassenger(receive2.getTaxiID(), receive2.getVacancy());
 		    		 ACLMessage msg4 = new ACLMessage(ACLMessage.INFORM);
 		    		 try {
 						msg4.setContentObject(informPassenger);
@@ -120,7 +122,8 @@ public class Central extends Agent{
 		    		 msg4 = blockingReceive();
 		    		 msg4.addReceiver(new AID("Passenger", AID.ISLOCALNAME));
 		    		 send(msg4);
-	    	  */}
+	    	}
+	    	  }
 	      }
 
 	      });   // fim do metodo setup

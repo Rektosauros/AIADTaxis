@@ -142,16 +142,17 @@ import jade.domain.FIPAException;
 		    	  case 1:
 		    		  
 		    		  //message receive
-		    	 MessageTemplate message = MessageTemplate.MatchPerformative(ACLMessage.REQUEST); 
+		    	 MessageTemplate message = MessageTemplate.MatchPerformative(ACLMessage.INFORM); 
 		         ACLMessage msg = myAgent.receive(message);
 		         if(msg != null) {
+		        	 AskTaxi receive = null;
 		        	 try {
-						AskTaxi receive = (AskTaxi) msg.getContentObject();
+						receive = (AskTaxi) msg.getContentObject();
+						System.out.println("Passenger id is " + receive.getIdPassenger() + "\nl");
 					} catch (UnreadableException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-		         }
 		         //reply
 		         TaxiCentral response;
 		         
@@ -177,7 +178,7 @@ import jade.domain.FIPAException;
 					
 					send(reply);
 	    	  
-		    	  }}
+		    	  }}}
 
 
 	   });}   // fim do metodo setup
