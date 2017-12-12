@@ -66,7 +66,7 @@ public class Launcher {
 			nrRoadTiles--;
 
 			AgentController taxiAgent;
-			taxiAgent = this.mainContainer.acceptNewAgent("Taxi nr" + i, taxi);
+			taxiAgent = this.mainContainer.acceptNewAgent("Taxi" + i, taxi);
 			taxiAgent.start();
 
 			taxis.add(taxi);
@@ -92,7 +92,7 @@ public class Launcher {
 			
 
 			AgentController passengerAgent;
-			passengerAgent = this.mainContainer.acceptNewAgent("Passenger nr" + i, passenger);
+			passengerAgent = this.mainContainer.acceptNewAgent("Passenger" + i, passenger);
 			passengerAgent.start();
 
 			passengers.add(passenger);
@@ -102,6 +102,16 @@ public class Launcher {
 	private void buidDisplay() {
 		System.out.println("Building Display");
 		simulation.startSimulation();
+	}
+
+	
+	
+	public ArrayList<Taxi> getTaxis() {
+		return taxis;
+	}
+
+	public void setTaxis(ArrayList<Taxi> taxis) {
+		this.taxis = taxis;
 	}
 
 	public void launchJade() throws StaleProxyException {

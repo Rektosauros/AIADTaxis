@@ -7,13 +7,14 @@ public class CentralPassenger implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	private int PassengerID;
+	private int taxiId;
 
 	Boolean msg;
 
-	public CentralPassenger(int id, Boolean msg1) {
+	public CentralPassenger(int id,int taxiId, Boolean msg1) {
 
 		this.PassengerID = id;
-
+		this.setTaxiId(taxiId);
 
 		this.msg = msg1;
 
@@ -31,6 +32,14 @@ public class CentralPassenger implements Serializable{
 		
 		return this.msg;
 		
+	}
+
+	public int getTaxiId() {
+		return taxiId;
+	}
+
+	public void setTaxiId(int taxiId) {
+		this.taxiId = taxiId;
 	}
 
 }

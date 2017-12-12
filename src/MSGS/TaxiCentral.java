@@ -11,18 +11,20 @@ public class TaxiCentral implements Serializable{
 		private static final long serialVersionUID = 1L;
 
 		private int taxiID;
+		private int passengerID;
 
 		private int currentX;
 		private int currentY;
 		
 		private boolean occupied;
 
-		public TaxiCentral(int id, int x, int y, boolean vacancy) {
+		public TaxiCentral(int id, int pasID, int x, int y, boolean vacancy) {
 
 			this.taxiID = id;
 			this.occupied = vacancy;
 			this.currentX = x;
 			this.currentY = y;
+			this.passengerID=pasID;
 
 		}
 
@@ -54,6 +56,14 @@ public class TaxiCentral implements Serializable{
 			
 			return occupied;
 			
+		}
+
+		public int getPassengerID() {
+			return passengerID;
+		}
+
+		public void setPassengerID(int passengerID) {
+			this.passengerID = passengerID;
 		}
 
 }
